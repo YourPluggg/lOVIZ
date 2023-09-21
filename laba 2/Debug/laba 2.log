@@ -1,0 +1,4 @@
+﻿  laba 2.cpp
+D:\проекты\Арифметика\laba 2\laba 2.cpp(23,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\проекты\Арифметика\laba 2\laba 2.cpp(33,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  laba 2.vcxproj -> D:\проекты\Арифметика\laba 2\Debug\laba 2.exe
