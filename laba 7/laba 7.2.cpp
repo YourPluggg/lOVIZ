@@ -8,26 +8,26 @@
 using namespace std;
 
 // Обход в глубину для матрицы смежности
-void DFSMatrix(vector<vector<int>>& matrix, int v, vector<bool>& visited) {
+void Matr(vector<vector<int>>& matrica, int v, vector<bool>& visited) {
     visited[v] = true;
     cout << v + 1 << " ";
 
-    for (int i = 0; i < matrix.size(); ++i) {
-        if (matrix[v][i] == 1 && !visited[i]) {
-            DFSMatrix(matrix, i, visited);
+    for (int i = 0; i < matrica.size(); ++i) {
+        if (matrica[v][i] == 1 && !visited[i]) {
+            Matr(matrica, i, visited);
         }
     }
 }
 
 // Обход в глубину для списка смежности
-void DFSList(int v, vector<vector<int>>& adj, vector<bool>& visited) {
+void Spsk(int v, vector<vector<int>>& zxc, vector<bool>& visited) {
     visited[v] = true;
     cout << v + 1 << " ";
 
-    for (int i = 0; i < adj[v].size(); ++i) {
-        int next = adj[v][i];
+    for (int i = 0; i < zxc[v].size(); ++i) {
+        int next = zxc[v][i];
         if (!visited[next]) {
-            DFSList(next, adj, visited);
+            Spsk(next, zxc, visited);
         }
     }
 }
@@ -39,7 +39,7 @@ int main() {
     cout << "Введите кол-во вершин матрицы: ";
     cin >> n;
 
-    vector<vector<int>> matrix(n, vector<int>(n));
+    vector<vector<int>> matrica(n, vector<int>(n));
 
     // Матрица 1
     cout << "Матрица смежности " << endl;
@@ -47,11 +47,11 @@ int main() {
     for (int i = 0; i < n; i++) {
         for (int j = i; j < n; j++) {
             if (i == j) {
-                matrix[i][j] = 0;
+                matrica[i][j] = 0;
             }
             else {
-                matrix[i][j] = rand() % 2;
-                matrix[j][i] = matrix[i][j];
+                matrica[i][j] = rand() % 2;
+                matrica[j][i] = matrica[i][j];
             }
         }
     }
@@ -59,7 +59,7 @@ int main() {
     // Вывод матрицы 1
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            cout << matrix[i][j] << " ";
+            cout << matrica[i][j] << " ";
         }
         cout << endl;
     }
@@ -73,20 +73,20 @@ int main() {
     for (int i = 0; i < n; ++i) {
         int v = i;
         if (!visited[v]) {
-            DFSMatrix(matrix, v, visited);
+            Matr(matrica, v, visited);
         }
     }
 
     fill(visited.begin(), visited.end(), false); // сброс посещенных
 
-    vector<vector<int>> adj(n);
+    vector<vector<int>> zxc(n);
 
     // Заполнение списка смежности на основе матрицы
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            if (matrix[i][j] == 1) {
-                adj[i].push_back(j);
-                //adj[j].push_back(i); // добавляем обратное ребро
+            if (matrica[i][j] == 1) {
+                zxc[i].push_back(j);
+                //zxc[j].push_back(i); // добавляем обратное ребро
             }
         }
     }
@@ -98,8 +98,8 @@ int main() {
     for (int i = 0; i < n; ++i) {
         cout << "Вершина " << i + 1 << ": ";
 
-        for (int j = 0; j < adj[i].size(); ++j) {
-            cout << adj[i][j] + 1 << " ";
+        for (int j = 0; j < zxc[i].size(); ++j) {
+            cout << zxc[i][j] + 1 << " ";
         }
 
         cout << "\n";
@@ -111,7 +111,7 @@ int main() {
     for (int i = 0; i < n; ++i) {
         int v = i;
         if (!visited[v]) {
-            DFSList(v, adj, visited);
+            Spsk(v, zxc, visited);
         }
     }
 
@@ -120,7 +120,7 @@ int main() {
 
 //Преобразование рекурсивной реализации обхода графа к не рекурсивной.
 // Обход в глубину для матрицы смежности
-/*void DFSMatrix(vector<vector<int>>& matrix, int v, vector<bool>& visited) {
+/*void Matr1(vector<vector<int>>& matrica, int v, vector<bool>& visited) {
     stack<int> stk; // Стек для хранения вершин
     stk.push(v); // добавляем начальную вершину в стек
 
@@ -132,8 +132,8 @@ int main() {
             visited[current] = true; // помечаем вершину как посещенную
             cout << current + 1 << " ";
 
-            for (int i = matrix.size() - 1; i >= 0; --i) {
-                if (matrix[current][i] == 1 && !visited[i]) {
+            for (int i = matrica.size() - 1; i >= 0; --i) {
+                if (matrica[current][i] == 1 && !visited[i]) {
                     stk.push(i); // добавляем смежные вершины в стек
                 }
             }
@@ -142,7 +142,7 @@ int main() {
 }
 
 // Обход в глубину для списка смежности
-void DFSList(int v, vector<vector<int>>& adj, vector<bool>& visited) {
+void sp(int v, vector<vector<int>>& zxc, vector<bool>& visited) {
     stack<int> stk; // Стек для хранения вершин
     stk.push(v); // добавляем начальную вершину в стек
 
@@ -154,8 +154,8 @@ void DFSList(int v, vector<vector<int>>& adj, vector<bool>& visited) {
             visited[current] = true; // помечаем вершину как посещенную
             cout << current + 1 << " ";
 
-            for (int i = adj[current].size() - 1; i >= 0; --i) {
-                int next = adj[current][i];
+            for (int i = zxc[current].size() - 1; i >= 0; --i) {
+                int next = zxc[current][i];
                 if (!visited[next]) {
                     stk.push(next); // добавляем смежные вершины в стек
                 }
@@ -171,7 +171,7 @@ int main() {
     cout << "Введите кол-во вершин матрицы: ";
     cin >> n;
 
-    vector<vector<int>> matrix(n, vector<int>(n));
+    vector<vector<int>> matrica(n, vector<int>(n));
 
     // Матрица 1
     cout << "Матрица смежности " << endl;
@@ -179,11 +179,11 @@ int main() {
     for (int i = 0; i < n; i++) {
         for (int j = i; j < n; j++) {
             if (i == j) {
-                matrix[i][j] = 0;
+                matrica[i][j] = 0;
             }
             else {
-                matrix[i][j] = rand() % 2;
-                matrix[j][i] = matrix[i][j];
+                matrica[i][j] = rand() % 2;
+                matrica[j][i] = matrica[i][j];
             }
         }
     }
@@ -191,7 +191,7 @@ int main() {
     // Вывод матрицы 1
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            cout << matrix[i][j] << " ";
+            cout << matrica[i][j] << " ";
         }
         cout << endl;
     }
@@ -205,20 +205,20 @@ int main() {
     for (int i = 0; i < n; ++i) {
         int v = i;
         if (!visited[v]) {
-            DFSMatrix(matrix, v, visited);
+            Matr1(matrica, v, visited);
         }
     }
 
     fill(visited.begin(), visited.end(), false); // сброс посещенных
 
-    vector<vector<int>> adj(n);
+    vector<vector<int>> zxc(n);
 
     // Заполнение списка смежности на основе матрицы
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            if (matrix[i][j] == 1) {
-                adj[i].push_back(j);
-                //adj[j].push_back(i); // добавляем обратное ребро
+            if (matrica[i][j] == 1) {
+                zxc[i].push_back(j);
+                //zxc[j].push_back(i); // добавляем обратное ребро
             }
         }
     }
@@ -230,8 +230,8 @@ int main() {
     for (int i = 0; i < n; ++i) {
         cout << "Вершина " << i + 1 << ": ";
 
-        for (int j = 0; j < adj[i].size(); ++j) {
-            cout << adj[i][j] + 1 << " ";
+        for (int j = 0; j < zxc[i].size(); ++j) {
+            cout << zxc[i][j] + 1 << " ";
         }
 
         cout << "\n";
@@ -243,7 +243,7 @@ int main() {
     for (int i = 0; i < n; ++i) {
         int v = i;
         if (!visited[v]) {
-            DFSList(v, adj, visited);
+            sp(v, zxc, visited);
         }
     }
 
