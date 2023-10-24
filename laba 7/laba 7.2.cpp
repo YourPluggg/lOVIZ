@@ -9,25 +9,44 @@ using namespace std;
 
 // Обход в глубину для матрицы смежности
 void Matr(vector<vector<int>>& matrica, int v, vector<bool>& visited) {
-    visited[v] = true;
-    cout << v + 1 << " ";
 
+    visited[v] = true;
+
+    bool isolated = true;
     for (int i = 0; i < matrica.size(); ++i) {
-        if (matrica[v][i] == 1 && !visited[i]) {
-            Matr(matrica, i, visited);
+        if (matrica[v][i] == 1) {
+            isolated = false;
+            break;
+        }
+    }
+
+    if (!isolated) {
+        cout << v + 1 << " ";
+
+        for (int i = 0; i < matrica.size(); ++i) {
+            if (matrica[v][i] == 1 && !visited[i]) {
+                Matr(matrica, i, visited);
+            }
         }
     }
 }
 
 // Обход в глубину для списка смежности
 void Spsk(int v, vector<vector<int>>& zxc, vector<bool>& visited) {
-    visited[v] = true;
-    cout << v + 1 << " ";
 
-    for (int i = 0; i < zxc[v].size(); ++i) {
-        int next = zxc[v][i];
-        if (!visited[next]) {
-            Spsk(next, zxc, visited);
+    visited[v] = true;
+
+    bool isolated = zxc[v].empty();
+
+    if (!isolated) {
+
+        cout << v + 1 << " ";
+
+        for (int i = 0; i < zxc[v].size(); ++i) {
+            int next = zxc[v][i];
+            if (!visited[next]) {
+                Spsk(next, zxc, visited);
+            }
         }
     }
 }
@@ -121,20 +140,28 @@ int main() {
 //Преобразование рекурсивной реализации обхода графа к не рекурсивной.
 // Обход в глубину для матрицы смежности
 /*void Matr1(vector<vector<int>>& matrica, int v, vector<bool>& visited) {
-    stack<int> stk; // Стек для хранения вершин
-    stk.push(v); // добавляем начальную вершину в стек
+    stack<int> stk;
+    stk.push(v);
 
     while (!stk.empty()) {
-        int current = stk.top(); // берем вершину на вершине стека
-        stk.pop(); // удаляем вершину из стека
+        int current = stk.top();
+        stk.pop();
 
         if (!visited[current]) {
-            visited[current] = true; // помечаем вершину как посещенную
-            cout << current + 1 << " ";
-
-            for (int i = matrica.size() - 1; i >= 0; --i) {
-                if (matrica[current][i] == 1 && !visited[i]) {
-                    stk.push(i); // добавляем смежные вершины в стек
+            bool isolated = true;
+            for (int i = 0; i < matrica.size(); ++i) {
+                if (matrica[current][i] == 1) {
+                    isolated = false;
+                    break;
+                }
+            }
+            if (!isolated) {
+                visited[current] = true;
+                cout << current + 1 << " ";
+                for (int i = matrica.size() - 1; i >= 0; --i) {
+                    if (matrica[current][i] == 1 && !visited[i]) {
+                        stk.push(i);
+                    }
                 }
             }
         }
@@ -143,21 +170,26 @@ int main() {
 
 // Обход в глубину для списка смежности
 void sp(int v, vector<vector<int>>& zxc, vector<bool>& visited) {
-    stack<int> stk; // Стек для хранения вершин
-    stk.push(v); // добавляем начальную вершину в стек
+
+    stack<int> stk;
+    stk.push(v);
 
     while (!stk.empty()) {
-        int current = stk.top(); // берем вершину на вершине стека
-        stk.pop(); // удаляем вершину из стека
+        int current = stk.top();
+        stk.pop();
 
         if (!visited[current]) {
-            visited[current] = true; // помечаем вершину как посещенную
-            cout << current + 1 << " ";
+            bool isolated = zxc[current].empty();
+            if (!isolated) {
+                visited[current] = true;
+                cout << current + 1 << " ";
+                for (int i = zxc[current].size() - 1; i >= 0; --i) {
 
-            for (int i = zxc[current].size() - 1; i >= 0; --i) {
-                int next = zxc[current][i];
-                if (!visited[next]) {
-                    stk.push(next); // добавляем смежные вершины в стек
+                    int next = zxc[current][i];
+
+                    if (!visited[next]) {
+                        stk.push(next);
+                    }
                 }
             }
         }
