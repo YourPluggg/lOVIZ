@@ -60,36 +60,45 @@ public:
 };
 
 void evade(vector<vector<int>>& Matr, int n) {
-    
     vector<bool> entered(n, false);
     vector<int> result;
-    
+
     line q;
 
     for (int i = 0; i < n; i++) {
         if (!entered[i]) {
-            line q;
-            q.insert(i);
-            entered[i] = true;
 
-            while (!q.isEmpty()) {
-                int v = q.del();
-                result.push_back(v);
-                for (int j = 0; j < n; j++) {
-                    if (Matr[v][j] == 1 && !entered[j]) {
-                        q.insert(j);
-                        entered[j] = true;
+            bool isolated = true;
+            for (int j = 0; j < n; j++) {
+                if (Matr[i][j] == 1) {
+                    isolated = false;
+                    break;
+                }
+            }
+            if (!isolated) {
+                q.insert(i);
+                entered[i] = true;
+                while (!q.isEmpty()) {
+                    int v = q.del();
+                    result.push_back(v);
+                    for (int j = 0; j < n; j++) {
+                        if (Matr[v][j] == 1 && !entered[j]) {
+                            q.insert(j);
+                            entered[j] = true;
+                        }
                     }
                 }
             }
         }
     }
+
     // вывод
-    cout << "\nОбход матрицы в ширину на основе ЛР№3\n";
+    cout << "\nОбход матрицы в ширину\n";
     for (int v : result) {
         cout << v + 1 << " ";
     }
     cout << endl;
+
 }
 
 int main() {
@@ -133,20 +142,28 @@ int main() {
     //обход матрицы в ширину
     for (int i = 0; i < n; i++) {
         if (!entered[i]) {
-            queue<int> q;
-            q.push(i);
-            entered[i] = true;
+            bool isolated = true;
+            for (int j = 0; j < n; j++) {
+                if (Matr[i][j] == 1) {
+                    isolated = false;
+                    break;
+                }
+            }
+            if (!isolated) {
+                queue<int> q;
+                q.push(i);
+                entered[i] = true;
+                while (!q.empty()) {
+                    int v = q.front();
+                    q.pop();
 
-            while (!q.empty()) {
-                int v = q.front();
-                q.pop();
+                    cout << v + 1 << " ";
 
-                cout << v + 1 << " ";
-
-                for (int j = 0; j < n; j++) {
-                    if (Matr[v][j] == 1 && !entered[j]) {
-                        q.push(j);
-                        entered[j] = true;
+                    for (int j = 0; j < n; j++) {
+                        if (Matr[v][j] == 1 && !entered[j]) {
+                            q.push(j);
+                            entered[j] = true;
+                        }
                     }
                 }
             }
@@ -187,21 +204,23 @@ int main() {
     //обход матрицы в ширину списка смежности
     for (int i = 0; i < n; i++) {
         if (!entered2[i]) {
-            queue<int> q;
-            q.push(i);
-            entered2[i] = true;
+            bool isolated = list[i].empty();
+            if (!isolated) {
+                queue<int> q;
+                q.push(i);
+                entered2[i] = true;
+                while (!q.empty()) {
+                    int v = q.front();
+                    q.pop();
 
-            while (!q.empty()) {
-                int v = q.front();
-                q.pop();
+                    cout << v + 1 << " ";
 
-                cout << v + 1 << " ";
-
-                for (int j = 0; j < list[v].size(); j++) {
-                    int u = list[v][j];
-                    if (!entered2[u]) {
-                        q.push(u);
-                        entered2[u] = true;
+                    for (int j = 0; j < list[v].size(); j++) {
+                        int u = list[v][j];
+                        if (!entered2[u]) {
+                            q.push(u);
+                            entered2[u] = true;
+                        }
                     }
                 }
             }
