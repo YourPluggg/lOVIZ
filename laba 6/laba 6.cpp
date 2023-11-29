@@ -490,8 +490,7 @@ int main() {
         std::cout << "5. Пересечение графов\n";
         std::cout << "6. Кольцевая сумма графов\n";
         std::cout << "7. Декартово произведение графов\n";
-        std::cout << "8. Просмотреть матрицы\n";
-        std::cout << "9. Выход\n";
+        std::cout << "8. Выход\n";
         std::cout << "\n";
         std::cout << "Выберите действие: ";
         std::cin >> option;
@@ -617,27 +616,6 @@ int main() {
 
         case 8:
             std::cout << "\n";
-            std::cout << "\n";
-            std::cout << "Матрица смежности 1:\n";
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    cout << std::setw(2) << mtrx[i][j] << ' ';
-                }
-                cout << endl;
-            }
-            prList(Matr1, n);
-            std::cout << "Матрица смежности 2:\n";
-            for (int i = 0; i < m; i++) {
-                for (int j = 0; j < m; j++) {
-                    cout << std::setw(2) << mtrx2[i][j] << ' ';
-                }
-                cout << endl;
-            }
-            prList(Matr2, m);
-            break;
-
-        case 9:
-            std::cout << "\n";
             std::cout << "Спасибо за то, что посмотрели наш код, надеюсь вам всё понравилось!!!!\n";
             std::cout << "\n";
             break;
@@ -648,7 +626,7 @@ int main() {
             std::cout << "\n";
             break;
         }
-    } while (option != 9);
+    } while (option != 8);
 
     // Освобождение памяти
     for (int i = 0; i < n; i++) {
