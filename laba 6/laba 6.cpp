@@ -66,7 +66,7 @@ void frList(Node* head) {
 void likeningRows(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
     // Проверка на корректность номеров вершин
     if (bar1 >= n || bar2 >= n || bar1 < 0 || bar2 < 0) {
-        std::cout << "Таких вершин нет (\n";
+        std::cout << "Такого выбора нет (\n";
         return;
     }
 
@@ -107,11 +107,11 @@ void likeningRows(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
 void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
     // Проверка на корректность номеров вершин
     if (bar1 >= n || bar2 >= n || bar1 < 0 || bar2 < 0) {
-        std::cout << "Таких вершин нет (\n";
+        std::cout << "Такого выбора нет (\n";
         return;
     }
     if (mtrx[bar1][bar2] == 0) {
-        std::cout << "Таких вершин нет (\n";
+        std::cout << "Такого выбора нет (\n";
         return;
     }
 
