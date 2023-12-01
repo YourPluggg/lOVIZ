@@ -115,6 +115,12 @@ void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
         return;
     }
 
+    // Проверка наличия петли у вершины
+    if (mtrx[bar1][bar1] != 0) {
+        //std::cout << "Петля у вершины " << bar1 + 1 << "!\n";
+        return;
+    }
+
     // Объединение рёбер в массиве смежности
     for (int i = 0; i < n; i++) {
         mtrx[i][bar1] = mtrx[i][bar1] || mtrx[i][bar2];
@@ -148,6 +154,50 @@ void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
     List(Matr1, mtrx, n);
 }
 
+/*void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
+    // Проверка на корректность номеров вершин
+    if (bar1 >= n || bar2 >= n || bar1 < 0 || bar2 < 0) {
+        std::cout << "Такого выбора нет (\n";
+        return;
+    }
+    if (mtrx[bar1][bar2] == 0) {
+        std::cout << "Такого выбора нет (\n";
+        return;
+    }
+
+    // Объединение рёбер в массиве смежности
+    for (int i = 0; i < n; i++) {
+        mtrx[i][bar1] = mtrx[i][bar1] || mtrx[i][bar2];
+    }
+    for (int i = 0; i < n; i++) {
+        mtrx[bar1][i] = mtrx[bar1][i] || mtrx[bar2][i];
+    }
+    mtrx[bar1][bar1] = 0;
+
+    // Сдвиг элементов после удаляемой строки и столбца
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = bar2; j < n - 1; j++) {
+            mtrx[i][j] = mtrx[i][j + 1];
+        }
+    }
+
+    for (int i = bar2; i < n - 1; i++) {
+        for (int j = 0; j < n; j++) {
+            mtrx[i][j] = mtrx[i + 1][j];
+        }
+    }
+
+    // Уменьшение количества вершин
+    n--;
+
+    // Очистка списков смежности и создание новых
+    for (int i = 0; i < n + 1; i++) {
+        frList(Matr1[i]);
+        Matr1[i] = nullptr;
+    }
+    List(Matr1, mtrx, n);
+}*/
+
 
 //Функция для расщепления вершин
 void SplittingApex(int**& mtrx, int& n, int bar1, Node**& Matr1) {
@@ -168,7 +218,7 @@ void SplittingApex(int**& mtrx, int& n, int bar1, Node**& Matr1) {
                 bar_nw[i][j] = mtrx[i][bar1];  // Копирование связей из удаляемого столбца
             }
             else {
-                bar_nw[i][j] = 0;  // Заполнение новых элементов нулями
+                bar_nw[i][j] = 1;  // Заполнение новых элементов нулями
             }
         }
     }
@@ -279,8 +329,8 @@ void IntersectionGrafs(int** mtrx, int** mtrx2, int n, int m) {
 
     // Вывод результата
     std::cout << "Пересекли графы:\n";
-    for (int i = 0; i < max_rows; i++) {
-        for (int j = 0; j < max_rows; j++) {
+    for (int i = 0; i < max_rows - 1; i++) {
+        for (int j = 0; j < max_rows - 1; j++) {
             std::cout << std::setw(2) << BarIntrs[i][j] << " ";
         }
         std::cout << "\n";
