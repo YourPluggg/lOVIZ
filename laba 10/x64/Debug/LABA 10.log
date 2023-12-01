@@ -1,0 +1,3 @@
+﻿  LABA 10.cpp
+D:\Users\22VVV1\lOVIZ-LABA10\laba 10\LABA 10.cpp(59,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  LABA 10.vcxproj -> D:\Users\22VVV1\lOVIZ-LABA10\laba 10\x64\Debug\LABA 10.exe
