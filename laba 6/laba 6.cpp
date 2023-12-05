@@ -15,8 +15,7 @@ struct Node {
     Node* next;
 };
 
-//Построение списка смежности
-void List(Node** Matr1, int** mtrx, int n) {
+void List(Node**& Matr1, int** mtrx, int n) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             if (mtrx[i][j] == 1) {
@@ -29,7 +28,6 @@ void List(Node** Matr1, int** mtrx, int n) {
     }
 }
 
-//Вывод списка смежности
 void prList(Node** Matr1, int n) {
     for (int i = 0; i < n; i++) {
         Node* actual = Matr1[i];
@@ -50,12 +48,20 @@ void prList(Node** Matr1, int n) {
     }
 }
 
-//Очистка списка смежности
 void frList(Node* head) {
     Node* actual = head;
     while (actual != nullptr) {
         Node* temp = actual;
         actual = actual->next;
+        delete temp;
+    }
+}
+
+// Очистка списка смежности
+void frrList(Node*& head) {
+    while (head != nullptr) {
+        Node* temp = head;
+        head = head->next;
         delete temp;
     }
 }
@@ -133,23 +139,52 @@ void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node**& Matr1) {
         return;
     }
 
-    // Проверка наличия петли у вершин
-    bool hasLoopBar1 = mtrx[bar1][bar1] != 0;
-    bool hasLoopBar2 = mtrx[bar2][bar2] != 0;
-
-    // Снятие связи между вершинами
-    mtrx[bar1][bar2] = 0;
-    mtrx[bar2][bar1] = 0;
-
-    // Проверка наличия петли у вершин после снятия связи
-    hasLoopBar1 = hasLoopBar1 && (mtrx[bar1][bar1] != 0);
-    hasLoopBar2 = hasLoopBar2 && (mtrx[bar2][bar2] != 0);
-
-    // Очистка списков смежности и создание новых
+    // Сохранение рёбер перед удалением связанных вершин
+    std::vector<std::vector<int>> savedEdges(n, std::vector<int>(n, 0));
     for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            savedEdges[i][j] = mtrx[i][j];
+        }
+    }
+
+    // Объединение рёбер и удаление связанных вершин
+    for (int i = 0; i < n; i++) {
+        mtrx[i][bar1] = mtrx[i][bar1] || mtrx[i][bar2];
+    }
+    for (int i = 0; i < n; i++) {
+        mtrx[bar1][i] = mtrx[bar1][i] || mtrx[bar2][i];
+    }
+    mtrx[bar1][bar1] = 0;
+
+    // Сдвиг связей после удаленной вершины
+    for (int i = bar2; i < n - 1; i++) {
+        for (int j = 0; j < n; j++) {
+            mtrx[i][j] = mtrx[i + 1][j];
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = bar2; j < n - 1; j++) {
+            mtrx[i][j] = mtrx[i][j + 1];
+        }
+    }
+
+    // Уменьшение размера матрицы
+    n--;
+
+    // Восстановление рёбер после удаления связанных вершин
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            mtrx[i][j] = savedEdges[i][j];
+        }
+    }
+
+    // Очистка списков смежности
+    for (int i = 0; i < n + 1; i++) {
         frList(Matr1[i]);
         Matr1[i] = nullptr;
     }
+
+    // Обновление списков смежности
     List(Matr1, mtrx, n);
 }
 
@@ -557,7 +592,7 @@ int main() {
             else if (provided == 2) {
                 std::cout << "Введите вершины между которыми стянуть ребро: ";
                 std::cin >> bar1 >> bar2;
-                ScreedRidge(mtrx2, m, bar1 - 1, bar2 - 1, Matr2);
+                ScreedRidge(mtrx, n, bar1 - 1, bar2 - 1, Matr1);
                 for (int i = 0; i < m; i++) {
                     for (int j = 0; j < m; j++) {
                         cout << std::setw(2) << mtrx2[i][j] << ' ';
