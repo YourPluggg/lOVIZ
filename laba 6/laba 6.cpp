@@ -61,14 +61,16 @@ void frList(Node* head) {
 }
 
 //Функции для работы с графами 
-
 //Функция для отождествления вершин
-void likeningRows(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
+void likeningRows(int** mtrx, int& n, int bar1, int bar2, Node**& Matr1) {
     // Проверка на корректность номеров вершин
     if (bar1 >= n || bar2 >= n || bar1 < 0 || bar2 < 0) {
         std::cout << "Такого выбора нет (\n";
         return;
     }
+
+    // Проверка наличия петли у вершины bar1
+    bool hasLoop1 = mtrx[bar1][bar1] != 0;
 
     // Объединение рёбер в массиве смежности
     for (int i = 0; i < n; i++) {
@@ -79,20 +81,36 @@ void likeningRows(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
     }
 
     // Сдвиг элементов после удаляемой строки и столбца
+    for (int i = bar2; i < n - 1; i++) {
+        for (int j = 0; j < n; j++) {
+            mtrx[i][j] = mtrx[i + 1][j];
+        }
+    }
+
     for (int i = 0; i < n - 1; i++) {
         for (int j = bar2; j < n - 1; j++) {
             mtrx[i][j] = mtrx[i][j + 1];
         }
     }
 
-    for (int i = bar2; i < n - 1; i++) {
-        for (int j = 0; j < n - 1; j++) {
-            mtrx[i][j] = mtrx[i + 1][j];
+    // Уменьшение количества вершин
+    n--;
+
+    // Проверка наличия петли у других вершин
+    for (int i = 0; i < n; i++) {
+        if (mtrx[i][i] != 0) {
+            hasLoop1 = true;
+            break;
         }
     }
 
-    // Уменьшение количества вершин
-    n--;
+    // Вывод петли, если она есть у вершины bar1
+    if (hasLoop1) {
+        mtrx[bar1][bar1] = 1;  // Вывод петли в матрице
+    }
+    else {
+        mtrx[bar1][bar1] = 0;  // Убираем петлю, если её не осталось
+    }
 
     // Очистка списков смежности и создание новых
     for (int i = 0; i < n + 1; i++) {
@@ -104,7 +122,7 @@ void likeningRows(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
 
 
 //Функция для стягивания ребра
-void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
+void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node**& Matr1) {
     // Проверка на корректность номеров вершин
     if (bar1 >= n || bar2 >= n || bar1 < 0 || bar2 < 0) {
         std::cout << "Такого выбора нет (\n";
@@ -115,88 +133,25 @@ void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
         return;
     }
 
-    // Проверка наличия петли у вершины
-    if (mtrx[bar1][bar1] != 0) {
-        //std::cout << "Петля у вершины " << bar1 + 1 << "!\n";
-        return;
-    }
+    // Проверка наличия петли у вершин
+    bool hasLoopBar1 = mtrx[bar1][bar1] != 0;
+    bool hasLoopBar2 = mtrx[bar2][bar2] != 0;
 
-    // Объединение рёбер в массиве смежности
-    for (int i = 0; i < n; i++) {
-        mtrx[i][bar1] = mtrx[i][bar1] || mtrx[i][bar2];
-    }
-    for (int i = 0; i < n; i++) {
-        mtrx[bar1][i] = mtrx[bar1][i] || mtrx[bar2][i];
-    }
-    mtrx[bar1][bar1] = 0;
+    // Снятие связи между вершинами
+    mtrx[bar1][bar2] = 0;
+    mtrx[bar2][bar1] = 0;
 
-    // Сдвиг элементов после удаляемой строки и столбца
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = bar2; j < n - 1; j++) {
-            mtrx[i][j] = mtrx[i][j + 1];
-        }
-    }
-
-    for (int i = bar2; i < n - 1; i++) {
-        for (int j = 0; j < n; j++) {
-            mtrx[i][j] = mtrx[i + 1][j];
-        }
-    }
-
-    // Уменьшение количества вершин
-    n--;
+    // Проверка наличия петли у вершин после снятия связи
+    hasLoopBar1 = hasLoopBar1 && (mtrx[bar1][bar1] != 0);
+    hasLoopBar2 = hasLoopBar2 && (mtrx[bar2][bar2] != 0);
 
     // Очистка списков смежности и создание новых
-    for (int i = 0; i < n + 1; i++) {
+    for (int i = 0; i < n; i++) {
         frList(Matr1[i]);
         Matr1[i] = nullptr;
     }
     List(Matr1, mtrx, n);
 }
-
-/*void ScreedRidge(int** mtrx, int& n, int bar1, int bar2, Node** Matr1) {
-    // Проверка на корректность номеров вершин
-    if (bar1 >= n || bar2 >= n || bar1 < 0 || bar2 < 0) {
-        std::cout << "Такого выбора нет (\n";
-        return;
-    }
-    if (mtrx[bar1][bar2] == 0) {
-        std::cout << "Такого выбора нет (\n";
-        return;
-    }
-
-    // Объединение рёбер в массиве смежности
-    for (int i = 0; i < n; i++) {
-        mtrx[i][bar1] = mtrx[i][bar1] || mtrx[i][bar2];
-    }
-    for (int i = 0; i < n; i++) {
-        mtrx[bar1][i] = mtrx[bar1][i] || mtrx[bar2][i];
-    }
-    mtrx[bar1][bar1] = 0;
-
-    // Сдвиг элементов после удаляемой строки и столбца
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = bar2; j < n - 1; j++) {
-            mtrx[i][j] = mtrx[i][j + 1];
-        }
-    }
-
-    for (int i = bar2; i < n - 1; i++) {
-        for (int j = 0; j < n; j++) {
-            mtrx[i][j] = mtrx[i + 1][j];
-        }
-    }
-
-    // Уменьшение количества вершин
-    n--;
-
-    // Очистка списков смежности и создание новых
-    for (int i = 0; i < n + 1; i++) {
-        frList(Matr1[i]);
-        Matr1[i] = nullptr;
-    }
-    List(Matr1, mtrx, n);
-}*/
 
 
 //Функция для расщепления вершин
@@ -695,6 +650,5 @@ int main() {
 
     return 0;
 }
-
 
 
