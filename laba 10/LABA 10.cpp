@@ -54,6 +54,7 @@ void RGM(const vector<vector<int>>& graph, int nachalo1, int konec1, vector<int>
     }
 }
 
+
 int main(int argc, char* argv[]) {
     setlocale(LC_ALL, "Russian");
     srand(time(NULL));
@@ -61,18 +62,18 @@ int main(int argc, char* argv[]) {
     int n;
     cout << "Введите кол-во вершин матрицы: ";
     cin >> n;
-
+   
     vector<vector<int>> Matr(n, vector<int>(n));
     vector<vector<int>> graph(n, vector<int>(n));
     vector<vector<int>> list(n);
+    vector<vector<int>> adjMatrix(n, vector<int>(n, 0));
 
-    int** adjMatrix = new int* [n];
+    //Заполнение матрицы 
     for (int i = 0; i < n; i++) {
-        adjMatrix[i] = new int[n];
-
         for (int j = 0; j < n; j++) {
-            if (i == j) adjMatrix[i][j] = 0;
-            else adjMatrix[i][j] = rand() % 10;
+            if (i != j) {
+                adjMatrix[i][j] = rand() % 10;
+            }
         }
     }
 
@@ -178,7 +179,7 @@ int main(int argc, char* argv[]) {
 
     // Вывод списка смежности
 
-    cout << "\nСписок смежности:\n";
+    cout << "Список смежности:\n";
 
     for (int i = 0; i < n; ++i) {
         cout << "Вершина " << i + 1 << ": ";
@@ -243,14 +244,60 @@ int main(int argc, char* argv[]) {
         }
     }
     cout << "\n";
+    
+    cout << "\nДОП ЗАДАНИЕ ДЛЯ ПОЛУЧЕНИЯ ЗВЁЗДОЧКИ\n";
+    // Нахождение минимальной суммы расстояний и центра тяжести
+    // Заполняем вектор distances значениями -1, для проверки, была ли вершина посещена в процессе обхода
+    fill(distances.begin(), distances.end(), -1);
 
+    // Переменные для минимальной суммы и вершин с минимальной суммой расстояний
+    int overall_min_sum = INT_MAX;
+    vector<int> overall_min_vertices;
 
-    // освобождение памяти
+    // Проходим по каждой вершине графа
     for (int i = 0; i < n; i++) {
-        delete[] adjMatrix[i];
-    }
-    delete[] adjMatrix;
+        vector<int> temp_distances(n, -1); // хранить расстояния от текущей вершины до всех остальных
+        RGM(graph, i, -1, temp_distances);
+        int min_sum_distances = 0;  
 
+        // Выводим суммы расстояний 
+        cout << "Сумма расстояний от вершины " << i + 1 << " до всех остальных вершин: ";
+        for (int j = 0; j < temp_distances.size(); ++j) {
+            if (j != i) {
+                min_sum_distances += temp_distances[j];
+                cout << temp_distances[j] << " ";
+            }
+        }
+        cout << "Общая сумма: " << min_sum_distances << "\n";
+
+        // Проверяем, является ли текущая сумма минимальной
+        if (min_sum_distances < overall_min_sum) {
+            // Если да, обновляем минимальную сумму и очищаем 
+            overall_min_sum = min_sum_distances;
+            overall_min_vertices.clear();
+            overall_min_vertices.push_back(i);
+        }
+        else if (min_sum_distances == overall_min_sum) {
+            // Если сумма равна текущей минимальной, добавляем её в вектор
+            overall_min_vertices.push_back(i);
+        }
+    }
+    cout << "\nМинимальная сумма расстояний: " << overall_min_sum;
+
+    // Проверяем, что вершина(ы) не изолирована(ы) перед выводом 
+    if (!overall_min_vertices.empty() && !graph[overall_min_vertices[0]].empty()) {
+        cout << " Центром тяжести является вершина(ы) ";
+        for (int i = 0; i < overall_min_vertices.size(); ++i) {
+            cout << overall_min_vertices[i] + 1;
+            if (i < overall_min_vertices.size() - 1) {
+                cout << ", ";
+            }
+        }
+    }
+    else {
+        cout << " Нет центра тяжести, так как все вершины изолированы";
+    }
+    cout << "\n";
+    
     return 0;
 }
-
