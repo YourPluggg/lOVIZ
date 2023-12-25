@@ -31,7 +31,6 @@ int main() {
     cin >> n;
 
     vector<vector<int>> Matr(n, vector<int>(n));
-    vector<vector<int>> RevGraph(n, vector<int>());
     vector<vector<int>> RevMatr(n, vector<int>(n, 0));
 
     // Матрица смежности
